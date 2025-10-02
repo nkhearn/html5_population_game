@@ -16,6 +16,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const UNSUSTAINABILITY_THRESHOLD = 16000000000;
     let gameLoopInterval = null;
 
+    const interventionIcons = {
+        // Growth-Stemming
+        'gs01': '🏠', 'gs02': '👕', 'gs03': '🎧', 'gs04': '🛋️', 'gs05': '🎮',
+        'gs06': '🚗', 'gs07': '🏆', 'gs08': '📱', 'gs09': '🍞', 'gs10': '💧',
+        'gs11': '💪', 'gs12': '📦', 'gs13': '☀️', 'gs14': '☕', 'gs15': '👕',
+        'gs16': '📜', 'gs17': '🐾', 'gs18': '💡', 'gs19': '🌍', 'gs20': '🥤',
+        'gs21': '🧾', 'gs22': '🧪', 'gs23': '🏛️', 'gs24': '✨', 'gs25': '🌽',
+        // Population-Reducing
+        'pr01': '🧗', 'pr02': '🔋', 'pr03': '🛰️', 'pr04': '💥', 'pr05': '☠️',
+        'pr06': '⚙️', 'pr07': '👑', 'pr08': '🤖', 'pr09': '👤', 'pr10': '⚕️',
+        'pr11': '📄', 'pr12': '💸', 'pr13': '📉', 'pr14': '❄️', 'pr15': '☢️',
+        'pr16': '🍄', 'pr17': '🌊', 'pr18': '☣️', 'pr19': '🦟', 'pr20': '🌋',
+        'pr21': '🏞️', 'pr22': '🦠', 'pr23': '🚽', 'pr24': '💥', 'pr25': '🤖',
+        // Influence
+        'in01': '📰', 'in02': '🏅', 'in03': '🎉',
+        'placeholder': '❓'
+    };
+
     // Intervention Data with unlock conditions and type property
     const allInterventions = {
         growth: [
@@ -228,10 +246,10 @@ document.addEventListener('DOMContentLoaded', () => {
         button.id = intervention.id;
         button.className = 'intervention-btn';
 
-        const iconPath = `icons/${intervention.id}.png`;
+        const iconSymbol = interventionIcons[intervention.id] || interventionIcons['placeholder'];
 
         button.innerHTML = `
-            <img src="${iconPath}" alt="" class="intervention-icon" onerror="this.onerror=null;this.src='icons/placeholder.png';">
+            <div class="intervention-icon">${iconSymbol}</div>
             <div class="intervention-details">
                 <span class="title">${intervention.title}</span>
                 <small class="description">${intervention.description}</small>
