@@ -1,0 +1,148 @@
+:root {
+    --primary-bg: #121212;
+    --secondary-bg: #1E1E1E;
+    --primary-text: #E0E0E0;
+    --accent-color: #BB86FC;
+    --red-color: #CF6679;
+    --green-color: #03DAC6;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 480px; /* Max width for larger screens */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-bg);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+#stats-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    background-color: #2a2a2a;
+    text-align: center;
+}
+
+.stat {
+    flex: 1;
+}
+
+.stat h2 {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat p {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#interventions-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.intervention-category {
+    margin-bottom: 2rem;
+}
+
+.intervention-category h3 {
+    color: var(--green-color);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--green-color);
+    padding-bottom: 0.5rem;
+}
+
+.buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.intervention-btn {
+    background-color: #333;
+    color: var(--primary-text);
+    border: 1px solid var(--accent-color);
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.intervention-btn:hover {
+    background-color: #444;
+}
+
+.intervention-btn:disabled {
+    border-color: #555;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.intervention-btn .cost {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    margin-top: 0.5rem;
+}
+
+.modal {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--red-color);
+}
+
+.modal-content h2 {
+    color: var(--red-color);
+    margin-bottom: 1rem;
+}
+
+#restart-button {
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
