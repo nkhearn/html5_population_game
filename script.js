@@ -3,10 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const populationTicker = document.getElementById('population-ticker');
     const growthRateTicker = document.getElementById('growth-rate-ticker');
     const influenceTicker = document.getElementById('influence-ticker');
+    const timeSurvivedTicker = document.getElementById('time-survived-ticker');
     const gameOverModal = document.getElementById('game-over-modal');
     const restartButton = document.getElementById('restart-button');
     const growthStemmingButtonsContainer = document.getElementById('growth-stemming-buttons');
     const populationReducingButtonsContainer = document.getElementById('population-reducing-buttons');
+    const influenceButtonsContainer = document.getElementById('influence-buttons');
 
     const SAVE_KEY = 'population_game_save';
     let gameState;
@@ -78,8 +80,41 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'pr23', title: "Global Collapse of the Sewage System", description: "Effect: -6.0% Population", effect: -0.06, cost: 1000000, unlocksAt: 4000000000, type: 'reduction' },
             { id: 'pr24', title: "Initiate a Limited Nuclear Exchange", description: "Effect: -10% Population", effect: -0.10, cost: 2500000, unlocksAt: 8000000000, type: 'reduction' },
             { id: 'pr25', title: "AI Decimation of Human Race", description: "Effect: -20% Population", effect: -0.20, cost: 5000000, unlocksAt: 12000000000, type: 'reduction' },
+        ],
+        influence: [
+            // Tier 1
+            { id: 'in01', title: "Establish a State-Run News Agency", description: "Effect: +1 Influence/sec", effect: 1, cost: 500, unlocksAt: 50000, type: 'influence' },
+            { id: 'in02', title: "Host a Global Sporting Event", description: "Effect: +2 Influence/sec", effect: 2, cost: 1000, unlocksAt: 100000, type: 'influence' },
+            { id: 'in03', title: "Launch a 'Feel-Good' Public Holiday", description: "Effect: +3 Influence/sec", effect: 3, cost: 1500, unlocksAt: 150000, type: 'influence' },
         ]
     };
+
+    const backgroundTiers = [
+        { threshold: 14000000000, path: 'backgrounds/bg_14b.png' },
+        { threshold: 10000000000, path: 'backgrounds/bg_10b.png' },
+        { threshold: 5000000000, path: 'backgrounds/bg_5b.png' },
+        { threshold: 1000000000, path: 'backgrounds/bg_1b.png' },
+        { threshold: 0, path: 'backgrounds/placeholder_background.png' }
+    ];
+
+    function updateBackground() {
+        const currentBackground = document.body.style.backgroundImage;
+        let newBackgroundPath = `url('backgrounds/placeholder_background.png')`;
+
+        for (const tier of backgroundTiers) {
+            if (gameState.population >= tier.threshold) {
+                newBackgroundPath = `url('${tier.path}')`;
+                break;
+            }
+        }
+
+        if (currentBackground !== newBackgroundPath) {
+            const img = new Image();
+            img.onload = () => document.body.style.backgroundImage = newBackgroundPath;
+            img.onerror = () => document.body.style.backgroundImage = `url('backgrounds/placeholder_background.png')`;
+            img.src = newBackgroundPath.replace(/url\(['"]?(.*?)['"]?\)/, '$1');
+        }
+    }
 
     function saveGame() {
         const stateToSave = { ...gameState, purchasedInterventions: Array.from(gameState.purchasedInterventions) };
@@ -108,7 +143,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             gameState.influence += timeDiffSeconds * (gameState.baseInfluenceRate + (gameState.population / 50000));
+            gameState.timeSurvived += timeDiffSeconds;
         }
+    }
+
+    function formatTime(totalSeconds) {
+        const years = Math.floor(totalSeconds / 31536000);
+        const days = Math.floor((totalSeconds % 31536000) / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        let parts = [];
+        if (years > 0) parts.push(`${years}y`);
+        if (days > 0) parts.push(`${days}d`);
+        if (hours > 0) parts.push(`${hours}h`);
+        if (minutes > 0) parts.push(`${minutes}m`);
+        if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
+
+        return parts.join(' ');
     }
 
     function formatNumber(num) {
@@ -120,10 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
         populationTicker.textContent = formatNumber(gameState.population);
         growthRateTicker.textContent = `${(gameState.growthRate * 100).toFixed(3)}%`;
         influenceTicker.textContent = formatNumber(gameState.influence);
+        timeSurvivedTicker.textContent = formatTime(gameState.timeSurvived);
     }
 
     function updateInterventionButtons() {
-        [...allInterventions.growth, ...allInterventions.reduction].forEach(intervention => {
+        [...allInterventions.growth, ...allInterventions.reduction, ...allInterventions.influence].forEach(intervention => {
             const button = document.getElementById(intervention.id);
             if (button) {
                 const isPurchased = gameState.purchasedInterventions.has(intervention.id);
@@ -146,6 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
             gameState.growthRate += intervention.effect;
         } else if (intervention.type === 'reduction') {
             gameState.population *= (1 + intervention.effect);
+        } else if (intervention.type === 'influence') {
+            gameState.baseInfluenceRate += intervention.effect;
         }
         updateDisplay();
         updateInterventionButtons();
@@ -156,10 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
         button.id = intervention.id;
         button.className = 'intervention-btn';
 
-        const iconPath = `icons/placeholder.png`;
+        const iconPath = `icons/${intervention.id}.png`;
 
         button.innerHTML = `
-            <img src="${iconPath}" alt="" class="intervention-icon">
+            <img src="${iconPath}" alt="" class="intervention-icon" onerror="this.onerror=null;this.src='icons/placeholder.png';">
             <div class="intervention-details">
                 <span class="title">${intervention.title}</span>
                 <small class="description">${intervention.description}</small>
@@ -173,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function redrawInterventionButtons() {
         const currentlyVisibleGrowth = new Set(Array.from(growthStemmingButtonsContainer.children).map(b => b.id));
         const currentlyVisibleReduction = new Set(Array.from(populationReducingButtonsContainer.children).map(b => b.id));
+        const currentlyVisibleInfluence = new Set(Array.from(influenceButtonsContainer.children).map(b => b.id));
 
         allInterventions.growth.forEach(intervention => {
             if (gameState.population >= intervention.unlocksAt && !currentlyVisibleGrowth.has(intervention.id)) {
@@ -185,15 +242,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 populationReducingButtonsContainer.appendChild(createInterventionButton(intervention));
             }
         });
+
+        allInterventions.influence.forEach(intervention => {
+            if (gameState.population >= intervention.unlocksAt && !currentlyVisibleInfluence.has(intervention.id)) {
+                influenceButtonsContainer.appendChild(createInterventionButton(intervention));
+            }
+        });
     }
 
     function gameLoop() {
         gameState.population += gameState.population * gameState.growthRate;
         gameState.influence += gameState.baseInfluenceRate + (gameState.population / 50000);
+        gameState.timeSurvived++;
         gameState.lastUpdate = Date.now();
         redrawInterventionButtons();
         updateInterventionButtons();
         updateDisplay();
+        updateBackground();
         if (gameState.population >= UNSUSTAINABILITY_THRESHOLD) {
             clearInterval(gameLoopInterval);
             gameOverModal.style.display = 'flex';
@@ -205,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return {
             population: 20000, influence: 1000, growthRate: 0.005,
             baseInfluenceRate: 1, purchasedInterventions: new Set(), lastUpdate: Date.now(),
+            timeSurvived: 0,
         };
     }
 
@@ -231,6 +297,9 @@ document.addEventListener('DOMContentLoaded', () => {
         gameLoopInterval = setInterval(gameLoop, 1000);
         setInterval(saveGame, 5000);
         restartButton.addEventListener('click', resetGame);
+
+        // Expose for testing
+        window.gameState = gameState;
     }
 
     init();
