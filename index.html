@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Population Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <header id="stats-container">
+            <div class="stat">
+                <h2>Population</h2>
+                <p id="population-ticker">20,000</p>
+            </div>
+            <div class="stat">
+                <h2>Growth Rate</h2>
+                <p id="growth-rate-ticker">0.5%</p>
+            </div>
+            <div class="stat">
+                <h2>Influence</h2>
+                <p id="influence-ticker">0</p>
+            </div>
+        </header>
+
+        <main id="interventions-container">
+            <div id="growth-stemming-interventions" class="intervention-category">
+                <h3>Growth-Stemming</h3>
+                <div id="growth-stemming-buttons" class="buttons-grid">
+                    <!-- Intervention buttons will be dynamically added here -->
+                </div>
+            </div>
+            <div id="population-reducing-interventions" class="intervention-category">
+                <h3>Population-Reducing</h3>
+                <div id="population-reducing-buttons" class="buttons-grid">
+                    <!-- Intervention buttons will be dynamically added here -->
+                </div>
+            </div>
+        </main>
+
+        <div id="game-over-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Game Over</h2>
+                <p>The planet has become unsustainable.</p>
+                <button id="restart-button">Restart</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
