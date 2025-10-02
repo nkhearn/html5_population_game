@@ -32,14 +32,32 @@ body {
     flex-direction: column;
     background-color: var(--secondary-bg);
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+#game-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('backgrounds/placeholder_background.png');
+    background-repeat: repeat;
+    opacity: 0.05;
+    z-index: 0;
 }
 
 #stats-container {
     display: flex;
     justify-content: space-around;
     padding: 1rem;
-    background-color: #2a2a2a;
+    background-color: transparent; /* Make it transparent to see the background */
     text-align: center;
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .stat {
@@ -61,6 +79,8 @@ body {
     flex-grow: 1;
     overflow-y: auto;
     padding: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .intervention-category {
@@ -84,30 +104,60 @@ body {
     background-color: #333;
     color: var(--primary-text);
     border: 1px solid var(--accent-color);
-    padding: 1rem;
+    padding: 0.75rem;
     border-radius: 8px;
-    font-size: 0.9rem;
-    text-align: left;
     cursor: pointer;
     transition: background-color 0.2s;
     width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: left;
 }
 
 .intervention-btn:hover {
     background-color: #444;
 }
 
-.intervention-btn:disabled {
+.intervention-btn.purchased, .intervention-btn:disabled {
     border-color: #555;
     color: #777;
     cursor: not-allowed;
+    background-color: #2a2a2a;
+}
+
+.intervention-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+    border-radius: 4px;
+}
+
+.intervention-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.intervention-details .title {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.intervention-details .description {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin: 0.2rem 0;
 }
 
 .intervention-btn .cost {
-    display: block;
     font-size: 0.8rem;
     color: var(--accent-color);
-    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
+.intervention-btn.purchased .cost {
+    color: #777;
 }
 
 .modal {

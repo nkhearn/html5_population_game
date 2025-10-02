@@ -13,21 +13,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const UNSUSTAINABILITY_THRESHOLD = 16000000000;
     let gameLoopInterval = null;
 
-    // Intervention Data with unlock conditions AND type property
+    // Intervention Data with unlock conditions and type property
     const allInterventions = {
         growth: [
-            { id: 'gs1', title: "Encourage 'Work From Home' Culture", description: "Reduces social bonds. Effect: -0.05% Growth Rate", effect: -0.0005, cost: 150, unlocksAt: 0, type: 'growth' },
-            { id: 'gs2', title: "Mandate Oversized Headphones", description: "Causes stress. Effect: -0.1% Growth Rate", effect: -0.001, cost: 400, unlocksAt: 50000, type: 'growth' },
-            { id: 'gs3', title: "Subsidise Meal Kit Delivery Services", description: "Increases processed food consumption. Effect: -0.2% Growth Rate", effect: -0.002, cost: 900, unlocksAt: 250000, type: 'growth' },
-            { id: 'gs4', title: "Switch All City Streetlights to Blue LEDs", description: "Disrupts circadian rhythms. Effect: -0.3% Growth Rate", effect: -0.003, cost: 2000, unlocksAt: 1000000, type: 'growth' },
-            { id: 'gs5', title: "Replace all Sugar with High-Fructose Corn Syrup", description: "Drives metabolic syndrome. Effect: -0.5% Growth Rate", effect: -0.005, cost: 5000, unlocksAt: 50000000, type: 'growth' },
+            // Tier 1
+            { id: 'gs01', title: "Encourage 'Work From Home' Culture", description: "Effect: -0.05% Growth Rate", effect: -0.0005, cost: 150, unlocksAt: 0, type: 'growth' },
+            { id: 'gs02', title: "Abolish All Public Nudist Beaches", description: "Effect: -0.05% Growth Rate", effect: -0.0005, cost: 200, unlocksAt: 30000, type: 'growth' },
+            { id: 'gs03', title: "Mandate Oversized Headphones", description: "Effect: -0.1% Growth Rate", effect: -0.001, cost: 400, unlocksAt: 50000, type: 'growth' },
+            { id: 'gs04', title: "Promote 'Minimalist' Interior Design", description: "Effect: -0.1% Growth Rate", effect: -0.001, cost: 450, unlocksAt: 75000, type: 'growth' },
+            { id: 'gs05', title: "Mandate Weekly 'Family Gaming Night'", description: "Effect: -0.1% Growth Rate", effect: -0.001, cost: 500, unlocksAt: 100000, type: 'growth' },
+            { id: 'gs06', title: "Implement Mandatory 'Smart Roads'", description: "Effect: -0.1% Growth Rate", effect: -0.001, cost: 550, unlocksAt: 125000, type: 'growth' },
+            { id: 'gs07', title: "Introduce Universal 'Participation Trophies'", description: "Effect: -0.1% Growth Rate", effect: -0.001, cost: 600, unlocksAt: 150000, type: 'growth' },
+            // Tier 2
+            { id: 'gs08', title: "Launch Social Media 'Doom-Scrolling' Apps", description: "Effect: -0.15% Growth Rate", effect: -0.0015, cost: 800, unlocksAt: 200000, type: 'growth' },
+            { id: 'gs09', title: "Subsidise Gluten-Free Everything", description: "Effect: -0.15% Growth Rate", effect: -0.0015, cost: 850, unlocksAt: 250000, type: 'growth' },
+            { id: 'gs10', title: "Install 'Optimised' Low-Flow Taps Globally", description: "Effect: -0.15% Growth Rate", effect: -0.0015, cost: 900, unlocksAt: 300000, type: 'growth' },
+            { id: 'gs11', title: "Promote 'Extreme Fitness' Trends", description: "Effect: -0.15% Growth Rate", effect: -0.0015, cost: 950, unlocksAt: 350000, type: 'growth' },
+            // Tier 3
+            { id: 'gs12', title: "Subsidise Meal Kit Delivery Services", description: "Effect: -0.2% Growth Rate", effect: -0.002, cost: 1500, unlocksAt: 500000, type: 'growth' },
+            { id: 'gs13', title: "Standardise Extra-Small Doses of Vitamin D", description: "Effect: -0.2% Growth Rate", effect: -0.002, cost: 1600, unlocksAt: 600000, type: 'growth' },
+            { id: 'gs14', title: "Fund Studies Linking Coffee to Longevity", description: "Effect: -0.2% Growth Rate", effect: -0.002, cost: 1700, unlocksAt: 700000, type: 'growth' },
+            { id: 'gs15', title: "Promote Fast Fashion Trends (Microplastics)", description: "Effect: -0.25% Growth Rate", effect: -0.0025, cost: 2500, unlocksAt: 1000000, type: 'growth' },
+            { id: 'gs16', title: "Fund Extremely Detailed Historical Records", description: "Effect: -0.25% Growth Rate", effect: -0.0025, cost: 2600, unlocksAt: 1250000, type: 'growth' },
+            { id: 'gs17', title: "Subsidise Expensive Pet Ownership", description: "Effect: -0.25% Growth Rate", effect: -0.0025, cost: 2700, unlocksAt: 1500000, type: 'growth' },
+            // Tier 4
+            { id: 'gs18', title: "Switch All City Streetlights to Blue LEDs", description: "Effect: -0.3% Growth Rate", effect: -0.003, cost: 5000, unlocksAt: 2500000, type: 'growth' },
+            { id: 'gs19', title: "Fund Academic Studies on Inevitable Climate Collapse", description: "Effect: -0.3% Growth Rate", effect: -0.003, cost: 5200, unlocksAt: 3000000, type: 'growth' },
+            { id: 'gs20', title: "Advertise Hyper-Masculine Energy Drinks", description: "Effect: -0.3% Growth Rate", effect: -0.003, cost: 5400, unlocksAt: 3500000, type: 'growth' },
+            { id: 'gs21', title: "Switch Paper Receipts to Thermal Paper", description: "Effect: -0.35% Growth Rate", effect: -0.0035, cost: 8000, unlocksAt: 5000000, type: 'growth' },
+            // Tier 5
+            { id: 'gs22', title: "Add 'Natural' Flavours to Bottled Water", description: "Effect: -0.4% Growth Rate", effect: -0.004, cost: 12000, unlocksAt: 10000000, type: 'growth' },
+            { id: 'gs23', title: "Encourage Complex, High-Tax Property Systems", description: "Effect: -0.4% Growth Rate", effect: -0.004, cost: 12500, unlocksAt: 25000000, type: 'growth' },
+            { id: 'gs24', title: "Promote Extensive Use of Hand Sanitiser", description: "Effect: -0.4% Growth Rate", effect: -0.004, cost: 13000, unlocksAt: 50000000, type: 'growth' },
+            { id: 'gs25', title: "Replace all Sugar with High-Fructose Corn Syrup", description: "Effect: -0.5% Growth Rate", effect: -0.005, cost: 25000, unlocksAt: 100000000, type: 'growth' },
         ],
         reduction: [
-            { id: 'pr1', title: "Global GPS Drift Calibration Error", description: "Causes non-fatal collisions. Effect: -0.1% Population", effect: -0.001, cost: 800, unlocksAt: 100000, type: 'reduction' },
-            { id: 'pr2', title: "Sabotage of Food Distribution Index", description: "Triggers riots. Effect: -0.75% Population", effect: -0.0075, cost: 3500, unlocksAt: 500000, type: 'reduction' },
-            { id: 'pr3', title: "Fungicide Spray Drift Incident", description: "Toxic agent sprayed over residential zones. Effect: -1.0% Population", effect: -0.01, cost: 8000, unlocksAt: 2000000, type: 'reduction' },
-            { id: 'pr4', title: "Accidental Release from Bio-Fuel Lab", description: "Contagious virus released. Effect: -1.5% Population", effect: -0.015, cost: 15000, unlocksAt: 100000000, type: 'reduction' },
-            { id: 'pr5', title: "AI Decimation of Human Race", description: "The AI begins a purge. Effect: -20% Population", effect: -0.20, cost: 1000000, unlocksAt: 1000000000, type: 'reduction' },
+            // Tier 1
+            { id: 'pr01', title: "Promote 'High-Risk' Extreme Sports Tourism", description: "Effect: -0.01% Population", effect: -0.0001, cost: 1000, unlocksAt: 100000, type: 'reduction' },
+            { id: 'pr02', title: "Mass Recall of Lithium Batteries", description: "Effect: -0.05% Population", effect: -0.0005, cost: 2500, unlocksAt: 200000, type: 'reduction' },
+            { id: 'pr03', title: "Global GPS Drift Calibration Error", description: "Effect: -0.1% Population", effect: -0.001, cost: 5000, unlocksAt: 300000, type: 'reduction' },
+            { id: 'pr04', title: "Launch a Global Satellite Collision Event", description: "Effect: -0.1% Population", effect: -0.001, cost: 5200, unlocksAt: 400000, type: 'reduction' },
+            { id: 'pr05', title: "Poisoning of Ancient Water Reservoirs", description: "Effect: -0.15% Population", effect: -0.0015, cost: 7000, unlocksAt: 500000, type: 'reduction' },
+            // Tier 2
+            { id: 'pr06', title: "Decommission All Redundant Safety Brakes", description: "Effect: -0.2% Population", effect: -0.002, cost: 9000, unlocksAt: 750000, type: 'reduction' },
+            { id: 'pr07', title: "Funding the 'Sovereign Citizen' Movement", description: "Effect: -0.25% Population", effect: -0.0025, cost: 12000, unlocksAt: 1000000, type: 'reduction' },
+            { id: 'pr08', title: "Upgrade to 'AI-Managed' Traffic Grids", description: "Effect: -0.3% Population", effect: -0.003, cost: 15000, unlocksAt: 1500000, type: 'reduction' },
+            { id: 'pr09', title: "Introduce a Cult of Personality (False Prophet)", description: "Effect: -0.35% Population", effect: -0.0035, cost: 18000, unlocksAt: 2000000, type: 'reduction' },
+            { id: 'pr10', title: "Contaminated Medical Supply Shipment", description: "Effect: -0.4% Population", effect: -0.004, cost: 22000, unlocksAt: 2500000, type: 'reduction' },
+            // Tier 3
+            { id: 'pr11', title: "'Accidental' Publication of Classified Documents", description: "Effect: -0.5% Population", effect: -0.005, cost: 30000, unlocksAt: 5000000, type: 'reduction' },
+            { id: 'pr12', title: "Global Currency Software Glitch", description: "Effect: -0.6% Population", effect: -0.006, cost: 40000, unlocksAt: 7500000, type: 'reduction' },
+            { id: 'pr13', title: "Sabotage of the Global Food Distribution Index", description: "Effect: -0.75% Population", effect: -0.0075, cost: 55000, unlocksAt: 10000000, type: 'reduction' },
+            { id: 'pr14', title: "Targeted EMP Strike on Arctic Monitoring Station", description: "Effect: -0.8% Population", effect: -0.008, cost: 65000, unlocksAt: 15000000, type: 'reduction' },
+            { id: 'pr15', title: "Sabotage of Nuclear Reactor Cooling System", description: "Effect: -0.9% Population", effect: -0.009, cost: 80000, unlocksAt: 20000000, type: 'reduction' },
+            // Tier 4
+            { id: 'pr16', title: "Fungicide Spray Drift Incident", description: "Effect: -1.0% Population", effect: -0.01, cost: 100000, unlocksAt: 50000000, type: 'reduction' },
+            { id: 'pr17', title: "Subtle Undermining of Tsunami Sea Walls", description: "Effect: -1.2% Population", effect: -0.012, cost: 125000, unlocksAt: 75000000, type: 'reduction' },
+            { id: 'pr18', title: "Accidental Release from Bio-Fuel Lab", description: "Effect: -1.5% Population", effect: -0.015, cost: 160000, unlocksAt: 100000000, type: 'reduction' },
+            { id: 'pr19', title: "Unauthorised Release of Genetically Modified Mosquitoes", description: "Effect: -2.5% Population", effect: -0.025, cost: 250000, unlocksAt: 250000000, type: 'reduction' },
+            { id: 'pr20', title: "Provoke a Major Volcanic Eruption (Drilling)", description: "Effect: -3.0% Population", effect: -0.03, cost: 350000, unlocksAt: 500000000, type: 'reduction' },
+            // Tier 5
+            { id: 'pr21', title: "Targeted Destruction of Major Dam Systems", description: "Effect: -4.0% Population", effect: -0.04, cost: 500000, unlocksAt: 1000000000, type: 'reduction' },
+            { id: 'pr22', title: "Release of 'Designer' Super-Virus", description: "Effect: -5.0% Population", effect: -0.05, cost: 750000, unlocksAt: 2000000000, type: 'reduction' },
+            { id: 'pr23', title: "Global Collapse of the Sewage System", description: "Effect: -6.0% Population", effect: -0.06, cost: 1000000, unlocksAt: 4000000000, type: 'reduction' },
+            { id: 'pr24', title: "Initiate a Limited Nuclear Exchange", description: "Effect: -10% Population", effect: -0.10, cost: 2500000, unlocksAt: 8000000000, type: 'reduction' },
+            { id: 'pr25', title: "AI Decimation of Human Race", description: "Effect: -20% Population", effect: -0.20, cost: 5000000, unlocksAt: 12000000000, type: 'reduction' },
         ]
     };
 
@@ -105,23 +155,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const button = document.createElement('button');
         button.id = intervention.id;
         button.className = 'intervention-btn';
-        button.innerHTML = `<span class="title">${intervention.title}</span><small class="description">${intervention.description}</small><span class="cost">Cost: ${formatNumber(intervention.cost)}</span>`;
+
+        const iconPath = `icons/placeholder.png`;
+
+        button.innerHTML = `
+            <img src="${iconPath}" alt="" class="intervention-icon">
+            <div class="intervention-details">
+                <span class="title">${intervention.title}</span>
+                <small class="description">${intervention.description}</small>
+                <span class="cost">Cost: ${formatNumber(intervention.cost)}</span>
+            </div>
+        `;
         button.addEventListener('click', () => applyIntervention(intervention));
         return button;
     }
 
     function redrawInterventionButtons() {
-        growthStemmingButtonsContainer.innerHTML = '';
-        populationReducingButtonsContainer.innerHTML = '';
+        const currentlyVisibleGrowth = new Set(Array.from(growthStemmingButtonsContainer.children).map(b => b.id));
+        const currentlyVisibleReduction = new Set(Array.from(populationReducingButtonsContainer.children).map(b => b.id));
 
         allInterventions.growth.forEach(intervention => {
-            if (gameState.population >= intervention.unlocksAt) {
+            if (gameState.population >= intervention.unlocksAt && !currentlyVisibleGrowth.has(intervention.id)) {
                 growthStemmingButtonsContainer.appendChild(createInterventionButton(intervention));
             }
         });
 
         allInterventions.reduction.forEach(intervention => {
-            if (gameState.population >= intervention.unlocksAt) {
+            if (gameState.population >= intervention.unlocksAt && !currentlyVisibleReduction.has(intervention.id)) {
                 populationReducingButtonsContainer.appendChild(createInterventionButton(intervention));
             }
         });
@@ -152,7 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem(SAVE_KEY);
         if (gameLoopInterval) clearInterval(gameLoopInterval);
         gameState = getDefaultGameState();
-        redrawInterventionButtons(); // This will clear and redraw based on the reset state
+        growthStemmingButtonsContainer.innerHTML = '';
+        populationReducingButtonsContainer.innerHTML = '';
+        redrawInterventionButtons();
         updateDisplay();
         updateInterventionButtons();
         gameLoopInterval = setInterval(gameLoop, 1000);
