@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const populationReducingButtonsContainer = document.getElementById('population-reducing-buttons');
     const influenceButtonsContainer = document.getElementById('influence-buttons');
     const newsContainer = document.getElementById('news-container');
+    const resetGameButton = document.getElementById('reset-game-button');
 
     const SAVE_KEY = 'population_game_save';
     let gameState;
@@ -358,6 +359,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.gameState = gameState;
         window.gameLoop = gameLoop;
         window.updateDisplay = updateDisplay;
+
+        resetGameButton.addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset the game? All progress will be lost.')) {
+                resetGame();
+            }
+        });
     }
 
     init();
