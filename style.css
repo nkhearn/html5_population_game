@@ -44,7 +44,8 @@ body {
     width: 100%;
     height: 100%;
     background-image: url('backgrounds/placeholder_background.png');
-    background-repeat: repeat;
+    background-size: cover;
+    background-position: center;
     opacity: 0.05;
     z-index: 0;
 }
@@ -248,4 +249,27 @@ body {
     font-size: 1rem;
     cursor: pointer;
     margin-top: 1rem;
+}
+
+footer {
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+#reset-game-button {
+    background-color: var(--red-color);
+    color: var(--primary-text);
+    border: 1px solid var(--red-color);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#reset-game-button:hover {
+    background-color: transparent;
+    color: var(--red-color);
 }
