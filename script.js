@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeSurvivedTicker = document.getElementById('time-survived-ticker');
     const gameOverModal = document.getElementById('game-over-modal');
     const restartButton = document.getElementById('restart-button');
+    const zeroPopulationModal = document.getElementById('zero-population-modal');
+    const restartButtonZero = document.getElementById('restart-button-zero');
     const growthStemmingButtonsContainer = document.getElementById('growth-stemming-buttons');
     const populationReducingButtonsContainer = document.getElementById('population-reducing-buttons');
     const influenceButtonsContainer = document.getElementById('influence-buttons');
@@ -167,20 +169,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatTime(totalSeconds) {
-        const years = Math.floor(totalSeconds / 31536000);
+        if (totalSeconds < 86400) { // If less than a day, show h/m/s
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+            let parts = [];
+            if (hours > 0) parts.push(`${hours}h`);
+            if (minutes > 0) parts.push(`${minutes}m`);
+            if (seconds >= 0) parts.push(`${seconds}s`);
+            return parts.join(' ');
+        }
+
+        const millennia = Math.floor(totalSeconds / 31536000000);
+        const centuries = Math.floor((totalSeconds % 31536000000) / 3153600000);
+        const decades = Math.floor((totalSeconds % 3153600000) / 315360000);
+        const years = Math.floor((totalSeconds % 315360000) / 31536000);
         const days = Math.floor((totalSeconds % 31536000) / 86400);
-        const hours = Math.floor((totalSeconds % 86400) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = Math.floor(totalSeconds % 60);
 
         let parts = [];
+        if (millennia > 0) parts.push(`${millennia}m`);
+        if (centuries > 0) parts.push(`${centuries}c`);
+        if (decades > 0) parts.push(`${decades}dec`);
         if (years > 0) parts.push(`${years}y`);
-        if (days > 0) parts.push(`${days}d`);
-        if (hours > 0) parts.push(`${hours}h`);
-        if (minutes > 0) parts.push(`${minutes}m`);
-        if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
+        if (days > 0 && parts.length < 2) parts.push(`${days}d`);
 
-        return parts.join(' ');
+        if (parts.length === 0) return "0d";
+
+        return parts.slice(0, 2).join(' ');
     }
 
     function formatNumber(num) {
@@ -297,6 +312,11 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(gameLoopInterval);
             gameOverModal.style.display = 'flex';
             localStorage.removeItem(SAVE_KEY);
+        } else if (gameState.population <= 0) {
+            clearInterval(gameLoopInterval);
+            gameState.population = 0;
+            zeroPopulationModal.style.display = 'flex';
+            localStorage.removeItem(SAVE_KEY);
         }
     }
 
@@ -319,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateInterventionButtons();
         gameLoopInterval = setInterval(gameLoop, 1000);
         gameOverModal.style.display = 'none';
+        zeroPopulationModal.style.display = 'none';
     }
 
     function init() {
@@ -331,9 +352,12 @@ document.addEventListener('DOMContentLoaded', () => {
         gameLoopInterval = setInterval(gameLoop, 1000);
         setInterval(saveGame, 5000);
         restartButton.addEventListener('click', resetGame);
+        restartButtonZero.addEventListener('click', resetGame);
 
         // Expose for testing
         window.gameState = gameState;
+        window.gameLoop = gameLoop;
+        window.updateDisplay = updateDisplay;
     }
 
     init();
